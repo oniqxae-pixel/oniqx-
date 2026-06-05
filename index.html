@@ -1,0 +1,3067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ONIQX Car Deals – Find Your Perfect Ride</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ===== CSS VARIABLES ===== */
+  :root {
+    --black: #000000;
+    --deep: #0a0a0f;
+    --dark: #0d0d18;
+    --card: #111120;
+    --border: #1e1e35;
+    --blue: #1a6fff;
+    --blue-bright: #3d8fff;
+    --blue-glow: #0d5cdb;
+    --blue-deep: #0a3fa0;
+    --white: #ffffff;
+    --grey: #a0a8c0;
+    --grey-dim: #5a607a;
+    --accent: #00c6ff;
+    --danger: #ff3b5c;
+    --success: #00e090;
+    --gold: #ffd060;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  img, svg { max-width: 100%; height: auto; }
+
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+
+  body {
+    font-family: 'Exo 2', sans-serif;
+    background: var(--deep);
+    color: var(--white);
+    overflow-x: hidden;
+    cursor: default;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--dark); }
+  ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+
+  /* ===== INTRO SCREEN ===== */
+  #intro {
+    position: fixed; inset: 0;
+    background: #000;
+    z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #intro-road {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 40%;
+    background: linear-gradient(to bottom, transparent, #0a0a0f 80%);
+  }
+
+  .road-lines {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 200px;
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .road-stripe {
+    width: 60px; height: 8px;
+    background: #ffd060;
+    opacity: 0;
+    animation: roadStripe 0.4s ease-out forwards;
+    margin: 0 30px;
+  }
+
+  @keyframes roadStripe {
+    from { transform: scaleX(0) translateX(300px); opacity: 0; }
+    to { transform: scaleX(1) translateX(0); opacity: 1; }
+  }
+
+  #intro-car {
+    position: absolute;
+    bottom: 15%;
+    left: -300px;
+    width: 300px;
+    animation: carDrive 1.8s cubic-bezier(0.25,0.46,0.45,0.94) 0.3s forwards;
+  }
+
+  @keyframes carDrive {
+    0% { left: -300px; opacity: 0; }
+    30% { opacity: 1; }
+    70% { left: calc(50% - 150px); }
+    85% { left: calc(50% - 120px); transform: scaleX(1); }
+    100% { left: 110%; opacity: 0; transform: scaleX(1); }
+  }
+
+  .intro-logo-wrap {
+    opacity: 0;
+    transform: scale(0.6) translateY(30px);
+    animation: introLogo 0.8s cubic-bezier(0.34,1.56,0.64,1) 1.8s forwards;
+    text-align: center;
+  }
+
+  @keyframes introLogo {
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .intro-logo-text {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(5rem, 15vw, 10rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  .intro-logo-text .white-part { color: var(--white); }
+  .intro-logo-text .blue-part { color: var(--blue-bright); }
+
+  .intro-subtitle {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.5em;
+    color: var(--blue);
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  .intro-bar {
+    width: min(300px, 80vw); height: 3px;
+    background: var(--border);
+    margin: 20px auto 0;
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeIn 0.3s 2s forwards;
+  }
+
+  .intro-bar-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--blue-deep), var(--accent));
+    border-radius: 2px;
+    animation: barFill 1s ease-out 2s forwards;
+  }
+
+  @keyframes barFill { to { width: 100%; } }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  #intro.hide {
+    animation: introOut 0.8s ease-in 3.2s forwards;
+  }
+
+  @keyframes introOut {
+    to { opacity: 0; transform: scale(1.05); pointer-events: none; }
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 0 40px;
+    height: 70px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-logo .w { color: var(--white); }
+  .nav-logo .b { color: var(--blue-bright); }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--grey);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 2px; background: var(--blue);
+    transform: scaleX(0);
+    transition: transform 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 24px;
+    background: var(--blue);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none; border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+    transform: translateX(-100%);
+    transition: transform 0.4s;
+  }
+
+  .btn-primary:hover { background: var(--blue-bright); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(26,111,255,0.4); }
+  .btn-primary:hover::before { transform: translateX(100%); }
+
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 24px;
+    background: transparent;
+    color: var(--blue-bright);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1.5px solid var(--blue);
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-outline:hover { background: var(--blue); color: var(--white); transform: translateY(-2px); }
+
+  .btn-danger {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 24px;
+    background: var(--danger);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-danger:hover { background: #ff1e3f; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 59, 92, 0.4); }
+
+  /* ===== HERO ===== */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 70px;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 60% 50%, rgba(26,111,255,0.12) 0%, transparent 70%),
+                linear-gradient(135deg, #000 0%, #0a0a18 50%, #000 100%);
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(26,111,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26,111,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridShift 20s linear infinite;
+  }
+
+  @keyframes gridShift {
+    from { transform: translateY(0); }
+    to { transform: translateY(60px); }
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 60px;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    padding: 6px 16px;
+    background: rgba(26,111,255,0.1);
+    border: 1px solid rgba(26,111,255,0.3);
+    border-radius: 20px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: slideUp 0.6s ease-out 3.8s both;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    animation: slideUp 0.6s ease-out 4s both;
+  }
+
+  .hero-title .line2 { color: var(--blue-bright); }
+
+  .hero-desc {
+    margin-top: 20px;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--grey);
+    max-width: 480px;
+    animation: slideUp 0.6s ease-out 4.1s both;
+  }
+
+  .hero-ctas {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    margin-top: 36px;
+    animation: slideUp 0.6s ease-out 4.2s both;
+  }
+
+  .hero-stats {
+    display: flex; gap: 40px;
+    margin-top: 50px;
+    animation: slideUp 0.6s ease-out 4.3s both;
+  }
+
+  .stat-item { text-align: center; }
+
+  .stat-num {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2.5rem;
+    color: var(--blue-bright);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    color: var(--grey-dim);
+    text-transform: uppercase;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Animated car SVG in hero */
+  .hero-car-wrap {
+    position: relative;
+    animation: slideUp 0.8s ease-out 4s both;
+  }
+
+  .hero-car-svg {
+    width: 100%;
+    filter: drop-shadow(0 20px 60px rgba(26,111,255,0.4));
+  }
+
+  .car-glow {
+    position: absolute; bottom: -20px; left: 10%; right: 10%;
+    height: 40px;
+    background: radial-gradient(ellipse, rgba(26,111,255,0.5) 0%, transparent 70%);
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.5; transform: scaleX(0.8); }
+    50% { opacity: 1; transform: scaleX(1.1); }
+  }
+
+  .floating-particles {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+
+  .particle {
+    position: absolute;
+    width: 3px; height: 3px;
+    background: var(--blue-bright);
+    border-radius: 50%;
+    animation: float var(--dur, 4s) ease-in-out var(--delay, 0s) infinite alternate;
+  }
+
+  @keyframes float {
+    from { transform: translateY(0) scale(1); opacity: 0.3; }
+    to { transform: translateY(-30px) scale(1.5); opacity: 1; }
+  }
+
+  /* ===== SECTIONS ===== */
+  section { padding: 100px 40px; }
+
+  .section-header { text-align: center; margin-bottom: 60px; }
+
+  .section-tag {
+    display: inline-block;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    letter-spacing: 0.03em;
+    line-height: 1;
+  }
+
+  .section-title span { color: var(--blue-bright); }
+
+  .section-desc {
+    margin-top: 14px;
+    font-size: 1rem;
+    color: var(--grey);
+    max-width: 500px; margin-left: auto; margin-right: auto;
+  }
+
+  /* ===== SEGMENTS ===== */
+  #segments { background: var(--dark); }
+
+  .segments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+    max-width: 1100px; margin: 0 auto;
+  }
+
+  .segment-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .segment-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--blue);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+
+  .segment-card:hover { border-color: var(--blue); transform: translateY(-6px); box-shadow: 0 16px 40px rgba(26,111,255,0.2); }
+  .segment-card:hover::before { transform: scaleX(1); }
+  .segment-card.active { border-color: var(--blue); background: rgba(26,111,255,0.08); }
+  .segment-card.active::before { transform: scaleX(1); }
+
+  .segment-icon { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+
+  .segment-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--grey);
+    transition: color 0.3s;
+  }
+
+  .segment-card:hover .segment-name,
+  .segment-card.active .segment-name { color: var(--white); }
+
+  .segment-count {
+    font-size: 0.75rem;
+    color: var(--grey-dim);
+    margin-top: 4px;
+  }
+
+  /* ===== LISTINGS ===== */
+  #listings { background: var(--deep); }
+
+  .filter-bar {
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap; justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .filter-btn {
+    padding: 8px 20px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--grey);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.active { background: var(--blue); border-color: var(--blue); color: var(--white); }
+
+  .listings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .car-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .car-card:hover { transform: translateY(-8px); border-color: rgba(26,111,255,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+
+  .car-card-img {
+    width: 100%; height: 200px;
+    object-fit: cover;
+    background: var(--dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .car-card-img .img-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, var(--card) 0%, transparent 60%);
+  }
+
+  .car-badge {
+    position: absolute; top: 12px; right: 12px;
+    padding: 4px 12px;
+    background: var(--blue);
+    border-radius: 4px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .car-badge.pending { background: var(--gold); color: var(--black); }
+  .car-badge.sold { background: var(--danger); }
+
+  .car-badge-owner {
+    position: absolute; top: 12px; left: 12px;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, var(--gold), #ffb800);
+    border-radius: 4px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--black);
+    box-shadow: 0 4px 12px rgba(255, 176, 0, 0.3);
+    z-index: 2;
+  }
+
+  .car-card-body { padding: 20px; }
+
+  .car-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .car-variant {
+    font-size: 0.85rem;
+    color: var(--grey-dim);
+    margin-bottom: 14px;
+  }
+
+  .car-specs {
+    display: flex; gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .car-spec {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.8rem;
+    color: var(--grey);
+  }
+
+  .car-spec-icon { color: var(--blue); font-size: 0.9rem; }
+
+  .car-price {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.8rem;
+    color: var(--blue-bright);
+    letter-spacing: 0.03em;
+  }
+
+  .car-price span {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem;
+    color: var(--grey-dim);
+    letter-spacing: 0;
+  }
+
+  .car-card-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    gap: 10px;
+  }
+
+  .pending-msg {
+    padding: 30px;
+    text-align: center;
+    background: var(--dark);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    color: var(--grey);
+  }
+
+  .pending-icon { font-size: 3rem; margin-bottom: 10px; }
+
+  /* ===== HOW IT WORKS ===== */
+  #how { background: var(--dark); }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 30px;
+    max-width: 1100px; margin: 0 auto;
+    position: relative;
+  }
+
+  .step-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .step-card:hover { border-color: var(--blue); transform: translateY(-4px); }
+
+  .step-num {
+    position: absolute; top: -10px; right: 20px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 5rem;
+    color: rgba(26,111,255,0.07);
+    line-height: 1;
+  }
+
+  .step-icon { font-size: 2rem; margin-bottom: 16px; display: block; }
+
+  .step-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .step-desc { font-size: 0.9rem; color: var(--grey); line-height: 1.6; }
+
+  /* ===== MODALS ===== */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(12px);
+    z-index: 2000;
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.open { display: flex; animation: modalFadeIn 0.3s ease; }
+
+  @keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlide 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+  }
+
+  .modal-wide { max-width: 700px; }
+
+  @keyframes modalSlide {
+    from { transform: scale(0.9) translateY(20px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  .modal-header {
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .modal-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+  }
+
+  .modal-title span { color: var(--blue-bright); }
+
+  .modal-close {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--border);
+    border: none; border-radius: 50%;
+    color: var(--grey);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .modal-close:hover { background: var(--danger); color: var(--white); }
+
+  .modal-body { padding: 28px 32px; }
+
+  /* ===== FORMS ===== */
+  .form-group { margin-bottom: 20px; }
+
+  .form-label {
+    display: block;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 8px;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--white);
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    appearance: none;
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(26,111,255,0.15);
+  }
+
+  .form-textarea { resize: vertical; min-height: 100px; }
+
+  .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .form-hint { font-size: 0.8rem; color: var(--grey-dim); margin-top: 6px; }
+
+  .form-divider {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 0.85rem;
+    color: var(--grey-dim);
+    position: relative;
+  }
+
+  .form-divider::before, .form-divider::after {
+    content: '';
+    position: absolute; top: 50%;
+    width: calc(50% - 30px);
+    height: 1px; background: var(--border);
+  }
+
+  .form-divider::before { left: 0; }
+  .form-divider::after { right: 0; }
+
+  /* Upload area */
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .upload-area:hover { border-color: var(--blue); background: rgba(26,111,255,0.05); }
+
+  .upload-area input[type="file"] {
+    position: absolute; inset: 0;
+    opacity: 0; cursor: pointer;
+  }
+
+  .upload-icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+  .upload-text { font-size: 0.9rem; color: var(--grey); }
+  .upload-text strong { color: var(--blue-bright); }
+
+  .upload-previews {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 14px;
+  }
+
+  .preview-img {
+    width: 80px; height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid var(--blue);
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .preview-img:hover { opacity: 0.7; }
+
+  /* Alert box */
+  .alert {
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .alert-success { background: rgba(0,224,144,0.1); border: 1px solid rgba(0,224,144,0.3); color: var(--success); }
+  .alert-danger { background: rgba(255,59,92,0.1); border: 1px solid rgba(255,59,92,0.3); color: var(--danger); }
+  .alert-info { background: rgba(26,111,255,0.1); border: 1px solid rgba(26,111,255,0.3); color: var(--blue-bright); }
+
+  /* ===== CONTACT ===== */
+  #contact { background: var(--deep); }
+
+  .contact-wrapper {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1.4fr;
+    gap: 60px; align-items: start;
+  }
+
+  .contact-info h3 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+  }
+
+  .contact-info p { color: var(--grey); line-height: 1.7; margin-bottom: 30px; }
+
+  .contact-detail {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .contact-detail-icon {
+    width: 44px; height: 44px;
+    background: rgba(26,111,255,0.1);
+    border: 1px solid rgba(26,111,255,0.2);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .contact-detail-text .label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--grey-dim);
+  }
+
+  .contact-detail-text .val { font-size: 0.95rem; color: var(--white); }
+
+  .contact-form-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    padding: 60px 40px 30px;
+  }
+
+  .footer-top {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  .footer-brand-name {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2.5rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    line-height: 1;
+  }
+
+  .footer-brand-name .w { color: var(--white); }
+  .footer-brand-name .b { color: var(--blue-bright); }
+
+  .footer-tagline { font-size: 0.9rem; color: var(--grey-dim); line-height: 1.6; }
+
+  .footer-col-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey-dim);
+    margin-bottom: 16px;
+  }
+
+  .footer-col a {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--grey);
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+
+  .footer-col a:hover { color: var(--blue-bright); }
+
+  .footer-bottom {
+    max-width: 1200px; margin: 0 auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.85rem; color: var(--grey-dim);
+    flex-wrap: wrap; gap: 10px;
+  }
+
+  /* ===== TOAST ===== */
+  #toast-container {
+    position: fixed; bottom: 30px; right: 30px;
+    z-index: 9998;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  .toast {
+    padding: 14px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: var(--white);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    display: flex; align-items: center; gap: 10px;
+    animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    max-width: 320px;
+  }
+
+  .toast.success { border-left: 3px solid var(--success); }
+  .toast.info { border-left: 3px solid var(--blue); }
+  .toast.error { border-left: 3px solid var(--danger); }
+
+  @keyframes toastIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  @keyframes toastOut {
+    to { transform: translateX(130%); opacity: 0; }
+  }
+
+  /* ===== TIMER BADGE ===== */
+  .timer-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px;
+    background: rgba(255,208,96,0.1);
+    border: 1px solid rgba(255,208,96,0.3);
+    border-radius: 10px;
+    font-size: 0.75rem;
+    color: var(--gold);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+  }
+
+  /* ===== PULSE DOT ===== */
+  .pulse-dot {
+    width: 8px; height: 8px;
+    background: var(--success);
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+  }
+
+  .pulse-dot::after {
+    content: '';
+    position: absolute; inset: -3px;
+    border-radius: 50%;
+    border: 1.5px solid var(--success);
+    opacity: 0;
+    animation: pulse 1.5s ease infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+  }
+
+  /* ===== ANIMATED LINES ===== */
+  .moving-line {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+    animation: lineSweep var(--dur, 3s) linear var(--delay, 0s) infinite;
+    opacity: 0.3;
+  }
+
+  @keyframes lineSweep {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(200%); }
+  }
+
+  /* ===== NO LISTINGS ===== */
+  .no-listings {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 30px;
+    color: var(--grey-dim);
+  }
+
+  .no-listings-icon { font-size: 4rem; margin-bottom: 16px; opacity: 0.4; }
+
+  /* ===== HAMBURGER MENU ===== */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px; height: 40px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 8px;
+    transition: border-color 0.2s;
+    flex-shrink: 0;
+  }
+  .hamburger:hover { border-color: var(--blue); }
+  .hamburger span {
+    display: block;
+    height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: all 0.3s;
+    width: 100%;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile nav drawer */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 70px; left: 0; right: 0;
+    background: rgba(0,0,0,0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    z-index: 999;
+    padding: 20px;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .mobile-nav.open { display: flex; }
+  .mobile-nav a {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--grey);
+    text-decoration: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+  .mobile-nav a:hover { background: rgba(26,111,255,0.1); color: var(--white); }
+  .mobile-nav .mobile-nav-actions {
+    display: flex; gap: 10px; margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .mobile-nav .mobile-nav-actions button { flex: 1; justify-content: center; }
+
+  /* ============================================
+     FULLY RESPONSIVE — ALL DEVICE SIZES
+     ============================================ */
+
+  /* ===== LARGE DESKTOP (1400px+) ===== */
+  @media (min-width: 1400px) {
+    .hero-content { max-width: 1320px; gap: 80px; }
+    .listings-grid { grid-template-columns: repeat(4, 1fr); }
+    .segments-grid { grid-template-columns: repeat(6, 1fr); }
+  }
+
+  /* ===== STANDARD DESKTOP (1200px–1399px) ===== */
+  @media (min-width: 1200px) and (max-width: 1399px) {
+    .hero-content { max-width: 1200px; }
+    .listings-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ===== SMALL LAPTOP / LARGE TABLET LANDSCAPE (1025px–1199px) ===== */
+  @media (max-width: 1199px) and (min-width: 1025px) {
+    .hero-content { padding: 0 30px; gap: 40px; }
+    .hero-car-svg { width: 95%; }
+    .listings-grid { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); }
+    section { padding: 90px 32px; }
+    .footer-top { grid-template-columns: 2fr 1fr 1fr; gap: 32px; }
+    .footer-top > div:last-child { display: none; }
+  }
+
+  /* ===== MEDIUM DESKTOP / SMALL LAPTOP (769px – 1024px) ===== */
+  @media (max-width: 1024px) {
+    .hero-content { gap: 36px; padding: 0 28px; }
+    .hero-car-svg { width: 100%; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 28px; }
+    section { padding: 80px 28px; }
+    .contact-wrapper { gap: 36px; }
+    .listings-grid { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 20px; }
+    .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    nav { padding: 0 28px; }
+  }
+
+  /* ===== TABLET PORTRAIT + LARGE PHONE LANDSCAPE (601px – 768px) ===== */
+  @media (max-width: 768px) {
+    /* Nav */
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .nav-desktop-actions { display: none !important; }
+    .hamburger { display: flex; }
+
+    /* Sections */
+    section { padding: 64px 20px; }
+
+    /* Hero */
+    #hero { min-height: auto; padding-top: 70px; padding-bottom: 60px; }
+    .hero-content {
+      grid-template-columns: 1fr;
+      text-align: center;
+      padding: 0 20px;
+      gap: 36px;
+    }
+    .hero-car-wrap {
+      display: flex;
+      justify-content: center;
+      max-width: 480px;
+      margin: 0 auto;
+      order: -1;
+    }
+    .hero-car-svg { width: 100%; }
+    .hero-ctas { justify-content: center; }
+    .hero-stats { justify-content: center; gap: 28px; }
+    .hero-desc { margin: 16px auto 0; max-width: 100%; }
+    .hero-tag { margin: 0 auto 16px; }
+
+    /* Segments */
+    .segments-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+    .segment-card { padding: 20px 10px; }
+    .segment-icon { font-size: 2rem; }
+
+    /* Listings */
+    .listings-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+    .car-card-img { height: 190px; }
+
+    /* Steps */
+    .steps-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
+    .step-card { padding: 24px 18px; }
+
+    /* How it works section */
+    #how .section-desc { max-width: 90%; }
+
+    /* Contact */
+    .contact-wrapper { grid-template-columns: 1fr; gap: 36px; }
+    .contact-info h3 { font-size: 1.6rem; }
+
+    /* Footer */
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 24px; }
+    footer { padding: 40px 20px 24px; }
+
+    /* Modals — slide up from bottom on mobile */
+    .modal {
+      max-width: 100%;
+      width: 100%;
+      border-radius: 20px 20px 0 0;
+      margin-top: auto;
+      max-height: 90vh;
+    }
+    .modal-overlay { align-items: flex-end; padding: 0; }
+    .modal-body { padding: 22px 20px; }
+    .modal-header { padding: 20px 20px 16px; }
+    .modal-wide { max-width: 100%; }
+    .form-grid-2 { grid-template-columns: 1fr; gap: 0; }
+
+    /* Forms — prevent iOS zoom on focus (font-size must be ≥16px) */
+    .form-input, .form-select, .form-textarea { font-size: 16px; }
+
+    /* Filter bar */
+    .filter-bar { gap: 8px; }
+    .filter-btn { padding: 7px 14px; font-size: 0.82rem; }
+
+    /* Buttons */
+    .btn-primary, .btn-outline { padding: 10px 18px; font-size: 0.9rem; }
+
+    /* Intro bar */
+    .intro-bar { width: min(300px, 80vw); }
+  }
+
+  /* ===== PHONE LANDSCAPE (480px – 600px) ===== */
+  @media (max-width: 600px) and (min-width: 481px) {
+    .listings-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .hero-car-wrap { max-width: 380px; }
+    .segments-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+    .steps-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ===== MOBILE PORTRAIT (≤480px) ===== */
+  @media (max-width: 480px) {
+    /* Nav */
+    nav { height: 60px; padding: 0 16px; }
+    .mobile-nav { top: 60px; }
+    .nav-logo { font-size: 1.6rem; }
+
+    /* Sections */
+    section { padding: 52px 16px; }
+
+    /* Hero */
+    #hero { padding-top: 60px; }
+    .hero-title { font-size: clamp(2.6rem, 11vw, 4rem); }
+    .hero-desc { font-size: 0.95rem; line-height: 1.65; }
+    .hero-stats { gap: 18px; flex-wrap: wrap; justify-content: center; }
+    .stat-num { font-size: 2rem; }
+    .hero-ctas { flex-direction: column; align-items: stretch; gap: 12px; }
+    .hero-ctas .btn-primary,
+    .hero-ctas .btn-outline { width: 100%; justify-content: center; padding: 14px 20px; font-size: 1rem; }
+    .hero-car-wrap { max-width: 100%; }
+
+    /* Section headers */
+    .section-header { margin-bottom: 32px; }
+    .section-tag { font-size: 0.72rem; letter-spacing: 0.2em; }
+    .section-title { font-size: clamp(2rem, 8vw, 3rem); }
+
+    /* Segments */
+    .segments-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .segment-card { padding: 14px 6px; border-radius: 10px; }
+    .segment-icon { font-size: 1.5rem; margin-bottom: 5px; }
+    .segment-name { font-size: 0.7rem; letter-spacing: 0; line-height: 1.2; }
+    .segment-count { display: none; }
+
+    /* Listings */
+    .listings-grid { grid-template-columns: 1fr; gap: 14px; }
+    .car-card-img { height: 200px; font-size: 4.5rem; }
+    .car-card-body { padding: 16px; }
+    .car-name { font-size: 1.1rem; }
+    .car-price { font-size: 1.6rem; }
+    .car-card-footer { padding: 10px 16px; gap: 8px; flex-wrap: wrap; }
+
+    /* Steps */
+    .steps-grid { grid-template-columns: 1fr; gap: 14px; }
+    .step-card { padding: 22px 18px; }
+
+    /* Contact */
+    .contact-form-card { padding: 22px 16px; }
+    .contact-detail { gap: 10px; }
+    .contact-detail-icon { width: 38px; height: 38px; font-size: 1rem; flex-shrink: 0; }
+    .contact-info p { font-size: 0.92rem; }
+
+    /* Footer */
+    .footer-top { grid-template-columns: 1fr; gap: 28px; }
+    .footer-brand-name { font-size: 2rem; }
+    .footer-bottom { flex-direction: column; text-align: center; gap: 6px; font-size: 0.8rem; }
+    footer { padding: 36px 16px 24px; }
+
+    /* Modals */
+    .modal { max-height: 93vh; border-radius: 18px 18px 0 0; }
+    .modal-title { font-size: 1.35rem; }
+    .form-input, .form-select, .form-textarea { font-size: 16px; padding: 11px 14px; }
+    .form-textarea { min-height: 90px; }
+
+    /* Upload area */
+    .upload-area { padding: 24px 14px; }
+    .upload-icon { font-size: 2rem; }
+    .preview-img { width: 70px; height: 52px; }
+
+    /* Filter bar — horizontal scroll */
+    .filter-bar {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      justify-content: flex-start;
+      padding-bottom: 6px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-btn { white-space: nowrap; flex-shrink: 0; padding: 7px 14px; font-size: 0.82rem; }
+
+    /* Buttons */
+    .btn-primary, .btn-outline { padding: 10px 16px; font-size: 0.88rem; }
+
+    /* Toast */
+    #toast-container { bottom: 12px; right: 12px; left: 12px; }
+    .toast { max-width: 100%; font-size: 0.85rem; }
+
+    /* No-listings message */
+    .no-listings { padding: 50px 20px; }
+    .no-listings-icon { font-size: 3rem; }
+
+    /* Intro adjustments */
+    .intro-logo-text { font-size: clamp(4rem, 18vw, 7rem); }
+    .intro-subtitle { font-size: 1.1rem; letter-spacing: 0.3em; }
+    .intro-bar { width: 80vw; }
+
+    /* Ad review grid in modal */
+    #adReviewBox > div[style*="grid-template-columns:1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* ===== VERY SMALL PHONES (≤360px) ===== */
+  @media (max-width: 360px) {
+    nav { height: 56px; padding: 0 12px; }
+    .mobile-nav { top: 56px; }
+    .nav-logo { font-size: 1.4rem; }
+    .hamburger { width: 34px; height: 34px; }
+
+    section { padding: 44px 12px; }
+    #hero { padding-top: 56px; }
+
+    .hero-title { font-size: clamp(2.2rem, 10.5vw, 3rem); }
+    .segments-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .segment-icon { font-size: 1.4rem; }
+
+    .hero-ctas .btn-primary,
+    .hero-ctas .btn-outline { font-size: 0.9rem; padding: 12px; }
+
+    .modal-body { padding: 16px 14px; }
+    .modal-header { padding: 16px 14px; }
+    .modal-title { font-size: 1.2rem; }
+    .contact-form-card { padding: 18px 14px; }
+    footer { padding: 28px 12px 20px; }
+
+    .hero-stats { gap: 12px; }
+    .stat-num { font-size: 1.8rem; }
+    .stat-label { font-size: 0.7rem; }
+  }
+
+  /* ===== LANDSCAPE PHONE (short height) ===== */
+  @media (max-height: 500px) and (max-width: 900px) {
+    #hero { min-height: auto; padding: 80px 20px 40px; }
+    .hero-car-wrap { display: none; }
+    .hero-content { grid-template-columns: 1fr; }
+    .modal { max-height: 96vh; }
+    .modal-overlay { align-items: center; }
+  }
+
+  /* ===== HIGH DPI / RETINA ===== */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .hero-grid { background-size: 40px 40px; }
+  }
+
+  /* ===== TOUCH DEVICES — increase tap targets ===== */
+  @media (hover: none) and (pointer: coarse) {
+    .filter-btn { min-height: 44px; }
+    .nav-links a { min-height: 44px; display: inline-flex; align-items: center; }
+    .mobile-nav a { min-height: 52px; display: flex; align-items: center; }
+    .btn-primary, .btn-outline { min-height: 44px; }
+    .segment-card { min-height: 88px; }
+    .modal-close { width: 44px; height: 44px; }
+    .hamburger { width: 44px; height: 44px; }
+  }
+
+  /* ===== SAFE AREA (notched phones — iPhone X+, Android) ===== */
+  nav {
+    padding-left: max(40px, env(safe-area-inset-left));
+    padding-right: max(40px, env(safe-area-inset-right));
+  }
+  footer {
+    padding-bottom: max(30px, env(safe-area-inset-bottom));
+  }
+  #toast-container {
+    bottom: max(30px, env(safe-area-inset-bottom));
+    right: max(30px, env(safe-area-inset-right));
+  }
+
+  /* ===== PRINT ===== */
+  @media print {
+    #intro, nav, .mobile-nav, #toast-container,
+    .modal-overlay, .hero-ctas, .filter-bar { display: none !important; }
+    body { background: white; color: black; }
+    section { padding: 20px 0; page-break-inside: avoid; }
+    .car-card { border: 1px solid #ccc; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== INTRO SCREEN ===== -->
+<div id="intro">
+  <!-- Animated road -->
+  <div id="intro-road">
+    <div class="road-lines">
+      <div class="road-stripe" style="animation-delay:0.2s"></div>
+      <div class="road-stripe" style="animation-delay:0.35s"></div>
+      <div class="road-stripe" style="animation-delay:0.5s"></div>
+      <div class="road-stripe" style="animation-delay:0.65s"></div>
+      <div class="road-stripe" style="animation-delay:0.8s"></div>
+      <div class="road-stripe" style="animation-delay:0.95s"></div>
+    </div>
+  </div>
+
+  <!-- Car SVG driving across — low slung sports car -->
+  <svg id="intro-car" viewBox="0 0 300 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Speed lines -->
+    <line x1="0" y1="55" x2="28" y2="55" stroke="#1a6fff" stroke-width="1.8" opacity="0.7"/>
+    <line x1="0" y1="63" x2="18" y2="63" stroke="#00c6ff" stroke-width="1.2" opacity="0.5"/>
+    <line x1="0" y1="70" x2="12" y2="70" stroke="#1a6fff" stroke-width="0.9" opacity="0.35"/>
+    <!-- Wheels -->
+    <circle cx="72" cy="90" r="17" fill="#06060f" stroke="#0d0d20" stroke-width="2"/>
+    <circle cx="72" cy="90" r="11" fill="#0d0d1c" stroke="#1a6fff" stroke-width="1.5"/>
+    <circle cx="72" cy="90" r="5" fill="#1a6fff" opacity="0.7"/>
+    <circle cx="72" cy="90" r="2.5" fill="#00c6ff"/>
+    <circle cx="228" cy="90" r="17" fill="#06060f" stroke="#0d0d20" stroke-width="2"/>
+    <circle cx="228" cy="90" r="11" fill="#0d0d1c" stroke="#1a6fff" stroke-width="1.5"/>
+    <circle cx="228" cy="90" r="5" fill="#1a6fff" opacity="0.7"/>
+    <circle cx="228" cy="90" r="2.5" fill="#00c6ff"/>
+    <!-- Body — low and wide supercar -->
+    <path d="M28 76 L38 73 L52 60 L88 50 L128 42 L178 38 L220 40 L248 50 L268 62 L272 76 Z" fill="#08091e" stroke="#0d1840" stroke-width="1.5"/>
+    <!-- Hood scoop accent -->
+    <path d="M220 42 L248 50 L265 62 L270 72" stroke="#0c1535" stroke-width="1" fill="none"/>
+    <!-- Roof cabin -->
+    <path d="M110 52 L132 36 L178 32 L220 35 L230 50 L228 56 L108 56 Z" fill="#040411" stroke="#08112e" stroke-width="1"/>
+    <!-- Windows -->
+    <path d="M116 54 L134 38 L172 33 L172 54 Z" fill="rgba(26,111,255,0.18)" stroke="#1a5aaa" stroke-width="1"/>
+    <path d="M176 33 L218 36 L226 52 L226 54 L176 54 Z" fill="rgba(26,111,255,0.18)" stroke="#1a5aaa" stroke-width="1"/>
+    <!-- B-pillar -->
+    <rect x="173" y="33" width="3" height="21" fill="#030310"/>
+    <!-- Side accent line -->
+    <path d="M42 66 Q 120 60 240 58" stroke="#1a6fff" stroke-width="1.5" fill="none" opacity="0.7"/>
+    <!-- Headlight -->
+    <ellipse cx="263" cy="66" rx="7" ry="4" fill="rgba(200,230,255,0.85)"/>
+    <ellipse cx="263" cy="66" rx="3.5" ry="2" fill="white"/>
+    <!-- Tail light -->
+    <rect x="30" y="60" width="5" height="14" rx="1.5" fill="#ff2040" opacity="0.85"/>
+    <!-- Mirror -->
+    <path d="M110 46 L96 43 L95 52 L110 52 Z" fill="#060616" stroke="#1a3a6a" stroke-width="0.8"/>
+    <!-- Side skirt -->
+    <path d="M38 76 L38 81 L268 81 L270 76 Z" fill="#040412" stroke="#0a1530" stroke-width="1"/>
+  </svg>
+
+  <!-- Logo reveal -->
+  <div class="intro-logo-wrap">
+    <div class="intro-logo-text">
+      <span class="white-part">ONIQ</span><span class="blue-part">X</span>
+    </div>
+    <div class="intro-subtitle">Car Deals</div>
+    <div class="intro-bar"><div class="intro-bar-fill"></div></div>
+  </div>
+</div>
+
+<!-- ===== NAVIGATION ===== -->
+<nav>
+  <a href="#hero" class="nav-logo"><span class="w">ONIQ</span><span class="b">X</span></a>
+  <ul class="nav-links">
+    <li><a href="#listings">Browse Cars</a></li>
+    <li><a href="#segments">Categories</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-desktop-actions" style="display:flex;gap:10px;align-items:center;">
+    <button class="btn-outline" onclick="openModal('loginModal')">Login</button>
+    <button class="btn-primary" onclick="openModal('postAdModal')">+ Post Your Car</button>
+  </div>
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Nav Drawer -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#listings" onclick="closeMobileNav()">Browse Cars</a>
+  <a href="#segments" onclick="closeMobileNav()">Categories</a>
+  <a href="#how" onclick="closeMobileNav()">How It Works</a>
+  <a href="#contact" onclick="closeMobileNav()">Contact</a>
+  <div class="mobile-nav-actions">
+    <button class="btn-outline" onclick="closeMobileNav();openModal('loginModal')">Login</button>
+    <button class="btn-primary" onclick="closeMobileNav();openModal('postAdModal')">+ Post Car</button>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <!-- Floating particles -->
+  <div class="floating-particles" id="particles"></div>
+
+  <div class="hero-content">
+    <div>
+      <div class="hero-tag">🚘 Pakistan's Premium Car Marketplace</div>
+      <h1 class="hero-title">
+        <span class="line1">Find Your</span><br>
+        <span class="line2">Dream Ride</span>
+      </h1>
+      <p class="hero-desc">ONIQX Car Deals connects buyers and sellers across Pakistan. Browse verified listings — from luxury sedans to rugged SUVs, all in one place.</p>
+      <div class="hero-ctas">
+        <button class="btn-primary" onclick="scrollToListings()">Browse Cars →</button>
+        <button class="btn-outline" onclick="openModal('postAdModal')">Sell Your Car</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num" id="statListings">0</div>
+          <div class="stat-label">Active Listings</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">50+</div>
+          <div class="stat-label">Sold This Month</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">4.9★</div>
+          <div class="stat-label">Seller Rating</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero car illustration — classy sports car -->
+    <div class="hero-car-wrap">
+      <svg class="hero-car-svg" viewBox="0 0 700 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="bodyGrad" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#1a2040"/>
+            <stop offset="100%" stop-color="#04040e"/>
+          </radialGradient>
+          <radialGradient id="roofGrad" cx="50%" cy="0%" r="100%">
+            <stop offset="0%" stop-color="#0d1530"/>
+            <stop offset="100%" stop-color="#020209"/>
+          </radialGradient>
+          <linearGradient id="accentLine" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#0a3fa0" stop-opacity="0"/>
+            <stop offset="30%" stop-color="#1a6fff"/>
+            <stop offset="70%" stop-color="#00c6ff"/>
+            <stop offset="100%" stop-color="#1a6fff" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="wheelGrad" cx="50%" cy="50%" r="50%" gradientUnits="objectBoundingBox" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1a1a2e"/>
+            <stop offset="100%" stop-color="#06060f"/>
+          </linearGradient>
+          <filter id="glowFilter" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="headlightGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Ground shadow -->
+        <ellipse cx="350" cy="292" rx="260" ry="14" fill="rgba(26,111,255,0.08)"/>
+        <ellipse cx="350" cy="292" rx="180" ry="8" fill="rgba(26,111,255,0.12)"/>
+
+        <!-- === WHEELS === -->
+        <!-- Rear wheel -->
+        <circle cx="172" cy="242" r="52" fill="#06060f" stroke="#0d0d20" stroke-width="3"/>
+        <circle cx="172" cy="242" r="44" fill="url(#wheelGrad)" stroke="#111128" stroke-width="1"/>
+        <!-- Rim spokes rear -->
+        <g transform="translate(172,242)" stroke="#1a6fff" stroke-width="2.5" opacity="0.9">
+          <line x1="0" y1="-38" x2="0" y2="-20"/>
+          <line x1="0" y1="20" x2="0" y2="38"/>
+          <line x1="-38" y1="0" x2="-20" y2="0"/>
+          <line x1="20" y1="0" x2="38" y2="0"/>
+          <line x1="-27" y1="-27" x2="-14" y2="-14"/>
+          <line x1="14" y1="14" x2="27" y2="27"/>
+          <line x1="27" y1="-27" x2="14" y2="-14"/>
+          <line x1="-14" y1="14" x2="-27" y2="27"/>
+        </g>
+        <circle cx="172" cy="242" r="18" fill="#0a0a1a" stroke="#1a6fff" stroke-width="1.5"/>
+        <circle cx="172" cy="242" r="8" fill="#1a6fff" opacity="0.7"/>
+        <circle cx="172" cy="242" r="4" fill="#00c6ff"/>
+
+        <!-- Front wheel -->
+        <circle cx="518" cy="242" r="52" fill="#06060f" stroke="#0d0d20" stroke-width="3"/>
+        <circle cx="518" cy="242" r="44" fill="url(#wheelGrad)" stroke="#111128" stroke-width="1"/>
+        <!-- Rim spokes front -->
+        <g transform="translate(518,242)" stroke="#1a6fff" stroke-width="2.5" opacity="0.9">
+          <line x1="0" y1="-38" x2="0" y2="-20"/>
+          <line x1="0" y1="20" x2="0" y2="38"/>
+          <line x1="-38" y1="0" x2="-20" y2="0"/>
+          <line x1="20" y1="0" x2="38" y2="0"/>
+          <line x1="-27" y1="-27" x2="-14" y2="-14"/>
+          <line x1="14" y1="14" x2="27" y2="27"/>
+          <line x1="27" y1="-27" x2="14" y2="-14"/>
+          <line x1="-14" y1="14" x2="-27" y2="27"/>
+        </g>
+        <circle cx="518" cy="242" r="18" fill="#0a0a1a" stroke="#1a6fff" stroke-width="1.5"/>
+        <circle cx="518" cy="242" r="8" fill="#1a6fff" opacity="0.7"/>
+        <circle cx="518" cy="242" r="4" fill="#00c6ff"/>
+
+        <!-- === BODY — ultra-low supercar profile === -->
+        <!-- Diffuser / underbody -->
+        <path d="M90 235 L95 250 L595 250 L610 235 Z" fill="#07071a" stroke="#0d1a3a" stroke-width="1"/>
+        <!-- Main body low slung -->
+        <path d="M68 215 L85 190 L110 175 L140 168 L190 165 L230 155 L290 128 L370 110 L450 108 L510 115 L560 135 L600 162 L628 190 L634 215 Z" fill="url(#bodyGrad)" stroke="#0d2060" stroke-width="1.5"/>
+        <!-- Body highlight top edge -->
+        <path d="M110 175 L140 168 L190 165 L230 155 L290 128 L370 110 L450 108 L510 115 L560 135 L600 162" stroke="#1a3a80" stroke-width="1" fill="none" opacity="0.6"/>
+
+        <!-- === ROOF / CABIN === -->
+        <path d="M235 155 L260 120 L300 100 L390 90 L460 92 L510 108 L520 130 L510 155 Z" fill="url(#roofGrad)" stroke="#0a1840" stroke-width="1.5"/>
+        <!-- Roof highlight -->
+        <path d="M260 120 L300 100 L390 90 L460 92 L500 105" stroke="#1a2860" stroke-width="1" fill="none" opacity="0.5"/>
+
+        <!-- === A-PILLAR === -->
+        <path d="M235 155 L260 120 L265 124 L242 158 Z" fill="#030310" stroke="#081430" stroke-width="1"/>
+
+        <!-- === WINDOWS === -->
+        <!-- Front window -->
+        <path d="M244 153 L263 122 L302 103 L390 92 L390 152 Z" fill="rgba(30,80,180,0.18)" stroke="#1a4aaa" stroke-width="1.5"/>
+        <!-- Window glare front -->
+        <path d="M268 118 L285 108 L285 130 L268 140 Z" fill="rgba(255,255,255,0.05)" stroke="none"/>
+        <!-- Rear window -->
+        <path d="M393 92 L458 93 L507 110 L518 130 L518 152 L393 152 Z" fill="rgba(30,80,180,0.18)" stroke="#1a4aaa" stroke-width="1.5"/>
+        <!-- Window glare rear -->
+        <path d="M420 96 L445 95 L445 120 L420 120 Z" fill="rgba(255,255,255,0.04)" stroke="none"/>
+        <!-- B-pillar -->
+        <rect x="389" y="92" width="5" height="60" fill="#030310"/>
+
+        <!-- === SIDE SKIRT === -->
+        <path d="M120 215 L140 208 L560 208 L590 215 L590 225 L120 225 Z" fill="#060618" stroke="#0a1535" stroke-width="1"/>
+        <!-- Accent stripe on skirt -->
+        <path d="M145 216 L565 216" stroke="url(#accentLine)" stroke-width="1.5" opacity="0.8"/>
+
+        <!-- === DOOR LINES === -->
+        <path d="M375 155 L375 208" stroke="#0a1840" stroke-width="2" opacity="0.7"/>
+        <!-- Door indent -->
+        <path d="M200 168 Q 290 160 375 158" stroke="#0a1535" stroke-width="1" fill="none" opacity="0.5"/>
+
+        <!-- === HOOD === -->
+        <path d="M510 155 L520 130 L510 108 L560 135 L600 162 L628 190 L628 215 L594 215 L590 208 L565 208 L560 165 Z" fill="#08091e" stroke="#0c1535" stroke-width="1.5"/>
+        <!-- Hood vents -->
+        <rect x="540" y="148" width="30" height="5" rx="2" fill="#03030c" stroke="#1a3a6a" stroke-width="1" opacity="0.8"/>
+        <rect x="540" y="158" width="24" height="4" rx="2" fill="#03030c" stroke="#1a3a6a" stroke-width="1" opacity="0.6"/>
+        <rect x="540" y="166" width="18" height="4" rx="2" fill="#03030c" stroke="#1a3a6a" stroke-width="1" opacity="0.5"/>
+
+        <!-- === FRONT FASCIA === -->
+        <path d="M594 215 L600 162 L628 190 L634 215 Z" fill="#04040f" stroke="#0a1535" stroke-width="1"/>
+        <!-- Front splitter -->
+        <path d="M590 230 L640 225 L642 240 L588 244 Z" fill="#05050f" stroke="#1a3060" stroke-width="1"/>
+
+        <!-- === HEADLIGHTS === -->
+        <!-- DRL strip -->
+        <path d="M608 175 L624 185 L622 195 L606 190 Z" fill="rgba(0,198,255,0.15)" stroke="#00c6ff" stroke-width="1.5" filter="url(#headlightGlow)" opacity="0.9"/>
+        <!-- Main headlight -->
+        <ellipse cx="618" cy="182" rx="10" ry="7" fill="rgba(200,230,255,0.85)" filter="url(#headlightGlow)"/>
+        <ellipse cx="618" cy="182" rx="5" ry="3.5" fill="white"/>
+        <!-- Headlight halo ring -->
+        <circle cx="618" cy="182" r="12" fill="none" stroke="rgba(0,198,255,0.4)" stroke-width="1"/>
+
+        <!-- === TAIL / REAR === -->
+        <!-- Rear fascia -->
+        <path d="M68 215 L85 190 L110 175 L120 215 Z" fill="#04040f" stroke="#0a1535" stroke-width="1"/>
+        <!-- Rear diffuser vents -->
+        <rect x="72" y="225" width="10" height="18" rx="2" fill="#030308" stroke="#1a2a50" stroke-width="1"/>
+        <rect x="86" y="225" width="8" height="18" rx="2" fill="#030308" stroke="#1a2a50" stroke-width="1"/>
+        <!-- Tail light cluster -->
+        <path d="M68 185 L85 188 L88 210 L68 212 Z" fill="rgba(255,30,60,0.12)" stroke="#ff2040" stroke-width="1.5" opacity="0.9"/>
+        <!-- Tail light inner bright -->
+        <path d="M72 192 L82 194 L82 205 L72 206 Z" fill="#ff2040" opacity="0.7"/>
+        <!-- Tail light LED strip -->
+        <path d="M70 188 L86 190" stroke="#ff3050" stroke-width="2" opacity="0.9"/>
+
+        <!-- === REAR WING / SPOILER === -->
+        <path d="M92 163 L160 160 L160 155 L92 158 Z" fill="#060616" stroke="#0c1535" stroke-width="1"/>
+        <rect x="100" y="158" width="3" height="8" fill="#0a1530"/>
+        <rect x="152" y="158" width="3" height="8" fill="#0a1530"/>
+
+        <!-- === MIRROR === -->
+        <path d="M230 140 L210 134 L207 148 L230 150 Z" fill="#060616" stroke="#1a3a6a" stroke-width="1"/>
+
+        <!-- === BLUE BODY ACCENT LINE === -->
+        <path d="M105 178 Q 200 165 310 152 Q 400 142 460 138 Q 510 136 555 142" stroke="url(#accentLine)" stroke-width="2.5" fill="none" filter="url(#glowFilter)" opacity="0.9"/>
+
+        <!-- === GROUND LINE / REFLECTION === -->
+        <path d="M85 250 Q 350 260 625 248" stroke="rgba(26,111,255,0.15)" stroke-width="1" fill="none"/>
+
+        <!-- Subtle reflection below car -->
+        <path d="M115 252 Q 350 265 600 252 L600 275 Q 350 285 115 275 Z" fill="url(#bodyGrad)" opacity="0.07"/>
+      </svg>
+      <div class="car-glow"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SEGMENTS ===== -->
+<section id="segments">
+  <div class="section-header">
+    <div class="section-tag">Browse by Type</div>
+    <h2 class="section-title">Vehicle <span>Segments</span></h2>
+    <p class="section-desc">Choose your vehicle category to find exactly what you're looking for</p>
+  </div>
+
+  <div class="segments-grid">
+    <div class="segment-card active" onclick="filterSegment(this,'all')">
+      <span class="segment-icon">🚗</span>
+      <div class="segment-name">All Vehicles</div>
+      <div class="segment-count">All listings</div>
+    </div>
+    <div class="segment-card" onclick="filterSegment(this,'sedan')">
+      <span class="segment-icon">🚙</span>
+      <div class="segment-name">Sedan</div>
+      <div class="segment-count">Family & daily</div>
+    </div>
+    <div class="segment-card" onclick="filterSegment(this,'suv')">
+      <span class="segment-icon">🛻</span>
+      <div class="segment-name">SUV / 4x4</div>
+      <div class="segment-count">Off-road ready</div>
+    </div>
+    <div class="segment-card" onclick="filterSegment(this,'luxury')">
+      <span class="segment-icon">💎</span>
+      <div class="segment-name">Luxury</div>
+      <div class="segment-count">Premium brands</div>
+    </div>
+    <div class="segment-card" onclick="filterSegment(this,'sports')">
+      <span class="segment-icon">🏎️</span>
+      <div class="segment-name">Sports / Coupe</div>
+      <div class="segment-count">High performance</div>
+    </div>
+    <div class="segment-card" onclick="filterSegment(this,'truck')">
+      <span class="segment-icon">🚚</span>
+      <div class="segment-name">Pickup Truck</div>
+      <div class="segment-count">Heavy duty</div>
+    </div>
+    <div class="segment-card" onclick="filterSegment(this,'van')">
+      <span class="segment-icon">🚐</span>
+      <div class="segment-name">Van / Minivan</div>
+      <div class="segment-count">Space & comfort</div>
+    </div>
+    <div class="segment-card" onclick="filterSegment(this,'electric')">
+      <span class="segment-icon">⚡</span>
+      <div class="segment-name">Electric / Hybrid</div>
+      <div class="segment-count">Eco-friendly</div>
+    </div>
+    <div class="segment-card" onclick="filterSegment(this,'hatchback')">
+      <span class="segment-icon">🚕</span>
+      <div class="segment-name">Hatchback</div>
+      <div class="segment-count">Compact & agile</div>
+    </div>
+    <div class="segment-card" onclick="filterSegment(this,'convertible')">
+      <span class="segment-icon">🏄</span>
+      <div class="segment-name">Convertible</div>
+      <div class="segment-count">Open top driving</div>
+    </div>
+    <div class="segment-card" onclick="filterSegment(this,'classic')">
+      <span class="segment-icon">🕹️</span>
+      <div class="segment-name">Classic / Vintage</div>
+      <div class="segment-count">Collector's items</div>
+    </div>
+    <div class="segment-card" onclick="filterSegment(this,'commercial')">
+      <span class="segment-icon">🏗️</span>
+      <div class="segment-name">Commercial</div>
+      <div class="segment-count">Business vehicles</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LISTINGS ===== -->
+<section id="listings">
+  <div class="section-header">
+    <div class="section-tag">Verified Listings</div>
+    <h2 class="section-title">Latest <span>Cars for Sale</span></h2>
+    <p class="section-desc">Browse verified listings from sellers across Pakistan</p>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="applyFilter(this,'all')">All</button>
+    <button class="filter-btn" onclick="applyFilter(this,'new')">New</button>
+    <button class="filter-btn" onclick="applyFilter(this,'used')">Used</button>
+    <button class="filter-btn" onclick="applyFilter(this,'certified')">Certified</button>
+  </div>
+
+  <div class="listings-grid" id="listingsGrid">
+    <div class="no-listings" id="noListingsMsg">
+      <div class="no-listings-icon">🚗</div>
+      <div style="font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:var(--grey);margin-bottom:8px;">No Approved Listings Yet</div>
+      <p style="font-size:0.9rem;">Be the first to post your car! Approved ads will appear here.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section id="how">
+  <div class="section-header">
+    <div class="section-tag">Simple Process</div>
+    <h2 class="section-title">How It <span>Works</span></h2>
+    <p class="section-desc">Post your car in minutes and go live instantly. Buyers see your listing right away.</p>
+  </div>
+
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <span class="step-icon">📝</span>
+      <div class="step-title">Create an Account</div>
+      <p class="step-desc">Sign up in seconds. Create your seller profile with your name, contact, and city in Pakistan.</p>
+    </div>
+    <div class="step-card">
+      <span class="step-icon">📸</span>
+      <div class="step-num">02</div>
+      <div class="step-title">Post Your Ad</div>
+      <p class="step-desc">Upload photos, choose your vehicle category, fill in the details — model, variant, year, price, and description.</p>
+    </div>
+    <div class="step-card">
+      <span class="step-icon">⏳</span>
+      <div class="step-num">03</div>
+      <div class="step-title">Go Live Instantly</div>
+      <p class="step-desc">Your ad goes live the moment you submit it. Buyers across Pakistan can see it instantly — no waiting required.</p>
+    </div>
+    <div class="step-card">
+      <span class="step-icon">🤝</span>
+      <div class="step-num">04</div>
+      <div class="step-title">Get Connected</div>
+      <p class="step-desc">Buyers browse your listing and contact you directly. Close the deal on your terms!</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact">
+  <div class="section-header">
+    <div class="section-tag">Get in Touch</div>
+    <h2 class="section-title">Contact <span>ONIQX</span></h2>
+    <p class="section-desc">Have a question? Need help posting an ad? We're here for you.</p>
+  </div>
+
+  <div class="contact-wrapper">
+    <div class="contact-info">
+      <h3>Let's Talk Cars 🚗</h3>
+      <p>Whether you're looking to buy, sell, or just need guidance — the ONIQX team is ready to help. Reach out and we'll get back to you within 24 hours.</p>
+
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📧</div>
+        <div class="contact-detail-text">
+          <div class="label">Email</div>
+          <div class="val"><a href="mailto:oniqx.ae@gmail.com" style="color:var(--white);text-decoration:none;">oniqx.ae@gmail.com</a></div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📍</div>
+        <div class="contact-detail-text">
+          <div class="label">Location</div>
+          <div class="val">Pakistan</div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">🕐</div>
+        <div class="contact-detail-text">
+          <div class="label">Response Time</div>
+          <div class="val">Within 24 hours</div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+      <!-- Live indicator -->
+      <div style="display:flex;align-items:center;gap:10px;margin-top:24px;background:rgba(0,224,144,0.05);border:1px solid rgba(0,224,144,0.15);border-radius:8px;padding:12px 16px;">
+        <span class="pulse-dot"></span>
+        <span style="font-size:0.85rem;color:var(--success);">Our team is currently online</span>
+      </div>
+    </div>
+
+    <div class="contact-form-card">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:'Bebas Neue',cursive;font-size:1.5rem;letter-spacing:0.05em;margin-bottom:6px;">Send Us a <span style="color:var(--blue-bright);">Message</span></div>
+        <p style="font-size:0.85rem;color:var(--grey-dim);">Your message will be sent directly to oniqx.ae@gmail.com</p>
+      </div>
+
+      <div id="contactAlert" style="display:none;"></div>
+
+      <div class="form-group">
+        <label class="form-label">Your Name *</label>
+        <input class="form-input" type="text" id="cName" placeholder="Muhammad Ali" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address *</label>
+        <input class="form-input" type="email" id="cEmail" placeholder="your@email.com" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone (Optional)</label>
+        <input class="form-input" type="tel" id="cPhone" placeholder="+92 300 0000000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Subject *</label>
+        <select class="form-select" id="cSubject">
+          <option value="">Select a topic</option>
+          <option value="buy">Looking to Buy a Car</option>
+          <option value="sell">Want to Sell My Car</option>
+          <option value="listing">Question About a Listing</option>
+          <option value="report">Report an Issue</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message *</label>
+        <textarea class="form-textarea" id="cMessage" placeholder="Tell us how we can help you..." style="min-height:130px;"></textarea>
+      </div>
+      <button class="btn-primary" style="width:100%;justify-content:center;padding:14px;" onclick="submitContact()">
+        Send Message →
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name"><span class="w">ONIQ</span><span class="b">X</span></div>
+      <p class="footer-tagline">Pakistan's trusted platform for buying and selling cars. Every listing verified. Every deal transparent.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Explore</div>
+      <a onclick="scrollToListings()">Browse Cars</a>
+      <a onclick="document.getElementById('segments').scrollIntoView({behavior:'smooth'})">Categories</a>
+      <a onclick="openModal('postAdModal')">Post an Ad</a>
+      <a onclick="openModal('loginModal')">My Account</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Vehicle Types</div>
+      <a>Sedans</a>
+      <a>SUV / 4x4</a>
+      <a>Luxury Cars</a>
+      <a>Sports Cars</a>
+      <a>Electric Vehicles</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Company</div>
+      <a>About ONIQX</a>
+      <a onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact Us</a>
+      <a>Privacy Policy</a>
+      <a>Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 ONIQX Car Deals. All rights reserved.</span>
+    <span>📧 oniqx.ae@gmail.com &nbsp;|&nbsp; 🇵🇰 Pakistan</span>
+  </div>
+</footer>
+
+<!-- ===== TOAST CONTAINER ===== -->
+<div id="toast-container"></div>
+
+<!-- ===== LOGIN MODAL ===== -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Welcome to <span>ONIQX</span></div>
+      <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="loginTab" style="display:block;">
+        <div id="loginAlert" style="display:none;"></div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" id="loginEmail" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="loginPassword" placeholder="••••••••">
+        </div>
+        <button class="btn-primary" style="width:100%;justify-content:center;padding:14px;margin-bottom:16px;" onclick="doLogin()">
+          Login to ONIQX →
+        </button>
+        <div class="form-divider">or</div>
+        <button class="btn-outline" style="width:100%;justify-content:center;padding:12px;margin-top:10px;" onclick="switchToRegister()">
+          Create New Account
+        </button>
+        <div class="form-hint" style="text-align:center;margin-top:16px;">Sellers must login to post ads. Buyers can browse freely.</div>
+      </div>
+
+      <div id="registerTab" style="display:none;">
+        <div id="registerAlert" style="display:none;"></div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" type="text" id="regFirstName" placeholder="Muhammad">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" type="text" id="regLastName" placeholder="Ali">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" id="regEmail" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input class="form-input" type="tel" id="regPhone" placeholder="+971 50 000 0000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">City</label>
+          <select class="form-select" id="regCity">
+            <option value="">Select City</option>
+            <option>Karachi</option>
+            <option>Lahore</option>
+            <option>Islamabad</option>
+            <option>Rawalpindi</option>
+            <option>Faisalabad</option>
+            <option>Multan</option>
+            <option>Peshawar</option>
+            <option>Quetta</option>
+            <option>Sialkot</option>
+            <option>Gujranwala</option>
+            <option>Hyderabad</option>
+            <option>Bahawalpur</option>
+            <option>Sargodha</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="regPassword" placeholder="At least 8 characters">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <input class="form-input" type="password" id="regPassword2" placeholder="Repeat password">
+        </div>
+        <button class="btn-primary" style="width:100%;justify-content:center;padding:14px;margin-bottom:14px;" onclick="doRegister()">
+          Create Account →
+        </button>
+        <div class="form-divider">or</div>
+        <button class="btn-outline" style="width:100%;justify-content:center;padding:12px;margin-top:10px;" onclick="switchToLogin()">
+          Back to Login
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== POST AD MODAL ===== -->
+<div class="modal-overlay" id="postAdModal">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <div class="modal-title">Post Your <span>Car Ad</span></div>
+      <button class="modal-close" onclick="closeModal('postAdModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="postAdAlert" style="display:none;"></div>
+
+      <!-- Login gate -->
+      <div id="loginGate" style="display:none;text-align:center;padding:30px 0;">
+        <div style="font-size:3rem;margin-bottom:14px;">🔒</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:var(--white);margin-bottom:8px;">Login Required</div>
+        <p style="color:var(--grey);margin-bottom:20px;font-size:0.9rem;">You need to be logged in to post a car ad.</p>
+        <button class="btn-primary" onclick="closeModal('postAdModal');openModal('loginModal');">Login / Register</button>
+      </div>
+
+      <div id="postAdForm">
+        <!-- Step indicator -->
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:28px;">
+          <div id="step1dot" style="width:28px;height:28px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;">1</div>
+          <div style="height:2px;flex:1;background:var(--border);position:relative;">
+            <div id="step1line" style="height:100%;background:var(--blue);width:0%;transition:width 0.4s;"></div>
+          </div>
+          <div id="step2dot" style="width:28px;height:28px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:var(--grey);">2</div>
+          <div style="height:2px;flex:1;background:var(--border);">
+            <div id="step2line" style="height:100%;background:var(--blue);width:0%;transition:width 0.4s;"></div>
+          </div>
+          <div id="step3dot" style="width:28px;height:28px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:var(--grey);">3</div>
+        </div>
+
+        <!-- Step 1: Car Info -->
+        <div id="adStep1">
+          <div style="font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--blue-bright);margin-bottom:20px;">Step 1 – Car Details</div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Car Company / Make *</label>
+              <select class="form-select" id="adMake">
+                <option value="">Select Make</option>
+                <option>Toyota</option><option>Nissan</option><option>Honda</option>
+                <option>Hyundai</option><option>Kia</option><option>Ford</option>
+                <option>Chevrolet</option><option>BMW</option><option>Mercedes-Benz</option>
+                <option>Audi</option><option>Lexus</option><option>Land Rover</option>
+                <option>Jeep</option><option>Mitsubishi</option><option>Suzuki</option>
+                <option>Porsche</option><option>Ferrari</option><option>Lamborghini</option>
+                <option>Dodge</option><option>GMC</option><option>Infiniti</option>
+                <option>Volvo</option><option>Mazda</option><option>Subaru</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Car Model / Name *</label>
+              <input class="form-input" type="text" id="adModel" placeholder="e.g. Camry, Patrol, X5">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Variant / Trim *</label>
+              <input class="form-input" type="text" id="adVariant" placeholder="e.g. Grande, Platinum, AMG">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Year *</label>
+              <select class="form-select" id="adYear">
+                <option value="">Select Year</option>
+                <script>for(let y=2025;y>=1990;y--)document.write(`<option>${y}</option>`);</script>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Vehicle Type / Segment *</label>
+              <select class="form-select" id="adSegment">
+                <option value="">Select Category</option>
+                <option value="sedan">Sedan</option>
+                <option value="suv">SUV / 4x4</option>
+                <option value="luxury">Luxury</option>
+                <option value="sports">Sports / Coupe</option>
+                <option value="truck">Pickup Truck</option>
+                <option value="van">Van / Minivan</option>
+                <option value="electric">Electric / Hybrid</option>
+                <option value="hatchback">Hatchback</option>
+                <option value="convertible">Convertible</option>
+                <option value="classic">Classic / Vintage</option>
+                <option value="commercial">Commercial</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Condition *</label>
+              <select class="form-select" id="adCondition">
+                <option value="">Select Condition</option>
+                <option value="new">Brand New</option>
+                <option value="used">Used</option>
+                <option value="certified">Certified Pre-Owned</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Mileage (km)</label>
+              <input class="form-input" type="number" id="adMileage" placeholder="e.g. 45000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Engine / Fuel *</label>
+              <select class="form-select" id="adFuel">
+                <option value="">Select</option>
+                <option>Petrol</option><option>Diesel</option>
+                <option>Hybrid</option><option>Electric</option>
+                <option>LPG</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Transmission</label>
+              <select class="form-select" id="adTransmission">
+                <option value="">Select</option>
+                <option>Automatic</option><option>Manual</option>
+                <option>CVT</option><option>Semi-Automatic</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Color</label>
+              <input class="form-input" type="text" id="adColor" placeholder="e.g. Pearl White">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Asking Price (PKR) *</label>
+            <input class="form-input" type="number" id="adPrice" placeholder="e.g. 3500000">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Location (City) *</label>
+            <select class="form-select" id="adLocation">
+              <option value="">Select City</option>
+              <option>Karachi</option>
+              <option>Lahore</option>
+              <option>Islamabad</option>
+              <option>Rawalpindi</option>
+              <option>Faisalabad</option>
+              <option>Multan</option>
+              <option>Peshawar</option>
+              <option>Quetta</option>
+              <option>Sialkot</option>
+              <option>Gujranwala</option>
+              <option>Hyderabad</option>
+              <option>Bahawalpur</option>
+              <option>Sargodha</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <button class="btn-primary" style="width:100%;justify-content:center;padding:13px;" onclick="goToStep2()">Next: Description & Photos →</button>
+        </div>
+
+        <!-- Step 2: Description + Photos -->
+        <div id="adStep2" style="display:none;">
+          <div style="font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--blue-bright);margin-bottom:20px;">Step 2 – Description & Photos</div>
+
+          <div class="form-group">
+            <label class="form-label">Car Description *</label>
+            <textarea class="form-textarea" id="adDescription" style="min-height:140px;" placeholder="Describe your car in detail — condition, features, history, reason for selling, service records, modifications, etc."></textarea>
+            <div class="form-hint">💡 Detailed descriptions get 3x more responses. Include service history, specs, and why you're selling.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Car Photos * (Upload up to 10)</label>
+            <div class="upload-area" id="uploadArea">
+              <input type="file" accept="image/*" multiple onchange="previewImages(event)">
+              <span class="upload-icon">📷</span>
+              <div class="upload-text">
+                <strong>Click to upload</strong> or drag and drop<br>
+                <span style="font-size:0.8rem;">JPG, PNG, WEBP — Max 5MB each</span>
+              </div>
+            </div>
+            <div class="upload-previews" id="uploadPreviews"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Seller Contact Phone *</label>
+            <input class="form-input" type="tel" id="adPhone" placeholder="+92 300 0000000">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Price Negotiable?</label>
+            <select class="form-select" id="adNegotiable">
+              <option value="yes">Yes – Price is negotiable</option>
+              <option value="no">No – Fixed price</option>
+              <option value="offer">Open to offers</option>
+            </select>
+          </div>
+
+          <div style="display:flex;gap:12px;">
+            <button class="btn-outline" style="padding:12px 20px;" onclick="backToStep1()">← Back</button>
+            <button class="btn-primary" style="flex:1;justify-content:center;padding:13px;" onclick="goToStep3()">Next: Review & Submit →</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Review -->
+        <div id="adStep3" style="display:none;">
+          <div style="font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--blue-bright);margin-bottom:20px;">Step 3 – Review & Submit</div>
+
+          <div id="adReviewBox" style="background:var(--dark);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;">
+            <!-- filled dynamically -->
+          </div>
+
+          <div class="alert alert-info">
+            <span>ℹ️</span>
+            <span>Review your listing carefully. Once you submit, it goes live immediately for all buyers to see.</span>
+          </div>
+
+          <div style="display:flex;gap:12px;">
+            <button class="btn-outline" style="padding:12px 20px;" onclick="backToStep2()">← Back</button>
+            <button class="btn-primary" style="flex:1;justify-content:center;padding:13px;" onclick="submitAd()">🚗 Post Ad — Go Live Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUCCESS MODAL ===== -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <div class="modal-body" style="text-align:center;padding:50px 36px;">
+      <div style="font-size:4rem;margin-bottom:16px;animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);">🎉</div>
+      <div style="font-family:'Bebas Neue',cursive;font-size:2rem;letter-spacing:0.05em;margin-bottom:10px;">Ad <span style="color:var(--success);">Live!</span></div>
+      <p style="color:var(--grey);line-height:1.7;margin-bottom:8px;">Your car listing is now <strong style="color:var(--success);">live on ONIQX</strong>. Buyers can already see it.</p>
+      <p style="color:var(--grey-dim);font-size:0.85rem;margin-bottom:30px;">A notification has been sent to <strong style="color:var(--white);">oniqx.ae@gmail.com</strong>.</p>
+      <div class="timer-badge" style="display:inline-flex;margin-bottom:28px;background:rgba(0,224,144,0.1);border-color:rgba(0,224,144,0.3);color:var(--success);">✅ Your listing is now visible to buyers</div>
+      <br>
+      <button class="btn-primary" onclick="closeModal('successModal')">Back to Homepage</button>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes popIn {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+</style>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+  // ===== INTRO =====
+  function renderLiveAds() {
+    const ads = JSON.parse(localStorage.getItem('oniqx_approved') || '[]');
+    const grid = document.getElementById('listingsGrid');
+    const noMsg = document.getElementById('noListingsMsg');
+    if (ads.length === 0) {
+      if (noMsg) noMsg.style.display = '';
+      return;
+    }
+    if (noMsg) noMsg.style.display = 'none';
+    grid.querySelectorAll('.car-card').forEach(c => c.remove());
+    ads.forEach((ad, index) => {
+      const icons = {petrol:'⛽',diesel:'🛢️',hybrid:'🔋',electric:'⚡',lpg:'🔥'};
+      const fuelIcon = icons[(ad.fuel||'').toLowerCase()] || '⛽';
+      const isOwnAd = currentUser && currentUser.email === ad.seller.email;
+      
+      // Get first image or use placeholder
+      const carImage = ad.images && ad.images.length > 0 ? ad.images[0] : null;
+      
+      const card = document.createElement('div');
+      card.className = 'car-card';
+      card.dataset.segment = ad.segment || 'other';
+      card.dataset.condition = ad.condition || 'used';
+      card.innerHTML = `
+        <div class="car-card-img" style="background:var(--dark);position:relative;overflow:hidden;">
+          ${carImage ? `<img src="${carImage}" style="width:100%;height:100%;object-fit:cover;" alt="${ad.year} ${ad.make} ${ad.model}">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;">🚗</div>`}
+          <div class="img-overlay"></div>
+          <span class="car-badge">${ad.condition === 'new' ? 'New' : ad.condition === 'certified' ? 'Certified' : 'Used'}</span>
+          ${isOwnAd ? `<span class="car-badge-owner">📌 Your Ad</span>` : ''}
+        </div>
+        <div class="car-card-body">
+          <div class="car-name">${ad.year} ${ad.make} ${ad.model}</div>
+          <div class="car-variant">${ad.variant} · ${ad.loc}, Pakistan</div>
+          <div class="car-specs">
+            <div class="car-spec"><span class="car-spec-icon">${fuelIcon}</span>${ad.fuel||'Petrol'}</div>
+            ${ad.mileage ? `<div class="car-spec"><span class="car-spec-icon">📏</span>${Number(ad.mileage).toLocaleString()} km</div>` : ''}
+            ${ad.trans ? `<div class="car-spec"><span class="car-spec-icon">⚙️</span>${ad.trans}</div>` : ''}
+          </div>
+          <div class="car-price">PKR ${Number(ad.price).toLocaleString()} <span>${ad.neg === 'yes' ? '· Negotiable' : ad.neg === 'offer' ? '· Open to offers' : ''}</span></div>
+        </div>
+        <div class="car-card-footer">
+          <span style="font-size:0.85rem;color:var(--grey);">📞 ${ad.phone}</span>
+          <div style="display:flex;gap:8px;">
+            <a class="btn-primary" style="padding:8px 16px;font-size:0.8rem;" href="tel:${ad.phone}">Contact Seller</a>
+            ${isOwnAd ? `<button class="btn-danger" style="padding:8px 16px;font-size:0.8rem;background:var(--danger);border:none;border-radius:4px;cursor:pointer;color:white;font-weight:700;transition:all 0.2s;" onclick="deleteAd(${index})" onmouseover="this.style.background='#ff1e3f'" onmouseout="this.style.background='var(--danger)'">🗑️ Delete</button>` : ''}
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  // ===== DELETE AD FUNCTION =====
+  function deleteAd(index) {
+    if (!currentUser) {
+      showAlert('listingsAlert', '⚠️ You must be logged in to delete ads.', 'danger');
+      return;
+    }
+
+    const ads = JSON.parse(localStorage.getItem('oniqx_approved') || '[]');
+    if (index < 0 || index >= ads.length) {
+      showAlert('listingsAlert', '⚠️ Ad not found.', 'danger');
+      return;
+    }
+
+    const ad = ads[index];
+    if (currentUser.email !== ad.seller.email) {
+      showAlert('listingsAlert', '❌ You can only delete your own ads.', 'danger');
+      return;
+    }
+
+    // Confirm deletion
+    if (confirm(`Delete this listing?\n\n${ad.year} ${ad.make} ${ad.model}\nPKR ${Number(ad.price).toLocaleString()}\n\nThis action cannot be undone.`)) {
+      ads.splice(index, 1);
+      localStorage.setItem('oniqx_approved', JSON.stringify(ads));
+      renderLiveAds();
+      updateListingCounter(-1);
+      showToast('🗑️ Ad deleted successfully', 'success');
+    }
+  }
+
+  // ===== DELETE ALL LISTINGS =====
+  function deleteAllListings() {
+    if (confirm('⚠️ DELETE ALL LISTINGS?\n\nThis will remove all car ads from the system.\n\nThis action CANNOT be undone!')) {
+      if (confirm('Are you absolutely sure? All ads will be permanently deleted!')) {
+        localStorage.setItem('oniqx_approved', JSON.stringify([]));
+        renderLiveAds();
+        updateListingCounter(-1000);
+        showToast('🗑️ All listings deleted successfully', 'success');
+        console.log('All listings cleared from system');
+      }
+    }
+  }
+
+  // ===== DELETE LISTINGS BY MAKE =====
+  function deleteListingsByMake(makeName) {
+    const ads = JSON.parse(localStorage.getItem('oniqx_approved') || '[]');
+    const initialCount = ads.length;
+    const filtered = ads.filter(ad => ad.make.toLowerCase() !== makeName.toLowerCase());
+    const deletedCount = initialCount - filtered.length;
+
+    if (deletedCount === 0) {
+      showToast(`❌ No ${makeName} listings found`, 'info');
+      return;
+    }
+
+    if (confirm(`Delete all ${makeName} listings?\n\n${deletedCount} ad(s) will be removed.\n\nThis action CANNOT be undone!`)) {
+      localStorage.setItem('oniqx_approved', JSON.stringify(filtered));
+      renderLiveAds();
+      updateListingCounter(-deletedCount);
+      showToast(`🗑️ ${deletedCount} ${makeName} listing(s) deleted successfully`, 'success');
+      console.log(`Deleted ${deletedCount} ${makeName} listings`);
+    }
+  }
+
+  window.addEventListener('load', () => {
+    const intro = document.getElementById('intro');
+    intro.classList.add('hide');
+    setTimeout(() => {
+      intro.style.display = 'none';
+    }, 4000);
+    const approvedAds = JSON.parse(localStorage.getItem('oniqx_approved') || '[]');
+    const el = document.getElementById('statListings');
+    if (el) {
+      el.dataset.count = approvedAds.length;
+      el.textContent = approvedAds.length > 0 ? approvedAds.length + '+' : '0';
+    }
+    renderLiveAds();
+    checkAutoLogin();  // Auto-restore user session if they were logged in
+  });
+
+  // ===== PARTICLES =====
+  (function createParticles() {
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = Math.random() * 100 + '%';
+      p.style.setProperty('--dur', (3 + Math.random() * 4) + 's');
+      p.style.setProperty('--delay', (Math.random() * 3) + 's');
+      container.appendChild(p);
+    }
+  })();
+
+  // ===== SESSION =====
+  let currentUser = null;
+
+  // ===== MODALS =====
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (id === 'postAdModal') {
+      document.getElementById('loginGate').style.display = currentUser ? 'none' : 'block';
+      document.getElementById('postAdForm').style.display = currentUser ? 'block' : 'none';
+    }
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Close on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeModal(overlay.id);
+    });
+  });
+
+  // ===== ACCOUNT MANAGEMENT =====
+  // Load registered accounts from localStorage
+  function getRegisteredAccounts() {
+    const accounts = localStorage.getItem('oniqx_accounts');
+    return accounts ? JSON.parse(accounts) : [];
+  }
+
+  // Save accounts to localStorage
+  function saveAccounts(accounts) {
+    localStorage.setItem('oniqx_accounts', JSON.stringify(accounts));
+  }
+
+  // Check if account exists
+  function accountExists(email) {
+    return getRegisteredAccounts().some(acc => acc.email.toLowerCase() === email.toLowerCase());
+  }
+
+  // Auto-login on page load if user was previously logged in
+  function checkAutoLogin() {
+    const savedUser = localStorage.getItem('oniqx_currentUser');
+    if (savedUser) {
+      currentUser = JSON.parse(savedUser);
+      updateNavForUser();
+      console.log('Auto-logged in as:', currentUser.name);
+    }
+  }
+
+  // ===== LOGIN =====
+  function switchToRegister() {
+    document.getElementById('loginTab').style.display = 'none';
+    document.getElementById('registerTab').style.display = 'block';
+  }
+
+  function switchToLogin() {
+    document.getElementById('registerTab').style.display = 'none';
+    document.getElementById('loginTab').style.display = 'block';
+  }
+
+  function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPassword').value;
+    if (!email || !pass) {
+      showAlert('loginAlert', 'Please fill in all fields.', 'danger');
+      return;
+    }
+
+    // Check against registered accounts
+    const accounts = getRegisteredAccounts();
+    const account = accounts.find(acc => acc.email.toLowerCase() === email.toLowerCase());
+
+    if (!account) {
+      showAlert('loginAlert', '❌ Email not found. Please register first.', 'danger');
+      return;
+    }
+
+    if (account.password !== pass) {
+      showAlert('loginAlert', '❌ Incorrect password.', 'danger');
+      return;
+    }
+
+    // Login successful
+    currentUser = { email: account.email, name: account.name, phone: account.phone, city: account.city };
+    localStorage.setItem('oniqx_currentUser', JSON.stringify(currentUser));
+    
+    // Clear login form
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+    
+    closeModal('loginModal');
+    showToast('✅ Welcome back, ' + currentUser.name + '!', 'success');
+    updateNavForUser();
+  }
+
+  function doRegister() {
+    const first = document.getElementById('regFirstName').value.trim();
+    const last = document.getElementById('regLastName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const city = document.getElementById('regCity').value;
+    const pass = document.getElementById('regPassword').value;
+    const pass2 = document.getElementById('regPassword2').value;
+
+    if (!first || !last || !email || !city || !pass) {
+      showAlert('registerAlert', 'Please fill in all required fields.', 'danger'); 
+      return;
+    }
+    if (pass !== pass2) {
+      showAlert('registerAlert', 'Passwords do not match.', 'danger'); 
+      return;
+    }
+    if (pass.length < 8) {
+      showAlert('registerAlert', 'Password must be at least 8 characters.', 'danger'); 
+      return;
+    }
+
+    // Check if email already registered
+    if (accountExists(email)) {
+      showAlert('registerAlert', '⚠️ Email already registered. Please login or use a different email.', 'danger');
+      return;
+    }
+
+    // Save account to localStorage
+    const newAccount = {
+      name: first + ' ' + last,
+      email: email,
+      phone: phone,
+      city: city,
+      password: pass,
+      registeredAt: new Date().toLocaleString()
+    };
+
+    const accounts = getRegisteredAccounts();
+    accounts.push(newAccount);
+    saveAccounts(accounts);
+
+    // Submit registration email (mailto link)
+    const subject = encodeURIComponent('New ONIQX Registration: ' + first + ' ' + last);
+    const body = encodeURIComponent(
+      `New user registered on ONIQX Car Deals\n\nName: ${first} ${last}\nEmail: ${email}\nPhone: ${phone}\nCity: ${city}\n\nRegistered at: ${new Date().toLocaleString()}`
+    );
+    window.open(`mailto:oniqx.ae@gmail.com?subject=${subject}&body=${body}`, '_blank');
+
+    // Auto-login after registration
+    currentUser = { email: email, name: first + ' ' + last, phone: phone, city: city };
+    localStorage.setItem('oniqx_currentUser', JSON.stringify(currentUser));
+
+    // Clear registration form
+    document.getElementById('regFirstName').value = '';
+    document.getElementById('regLastName').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regPhone').value = '';
+    document.getElementById('regCity').value = '';
+    document.getElementById('regPassword').value = '';
+    document.getElementById('regPassword2').value = '';
+
+    closeModal('loginModal');
+    showToast('✅ Account created! Welcome, ' + first + '!', 'success');
+    updateNavForUser();
+  }
+
+  function doLogout() {
+    currentUser = null;
+    localStorage.removeItem('oniqx_currentUser');
+    showToast('👋 Logged out successfully', 'info');
+    updateNavForUser();
+  }
+
+  function updateNavForUser() {
+    const loginBtn = document.querySelector('.btn-primary');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (currentUser) {
+      // Hide login button
+      if (loginBtn) loginBtn.style.display = 'none';
+      
+      // Update nav to show user info
+      if (navLinks && !navLinks.querySelector('.user-profile')) {
+        const userMenu = document.createElement('div');
+        userMenu.className = 'user-profile';
+        userMenu.innerHTML = `
+          <span style="color:var(--blue);font-weight:600;cursor:default;">👤 ${currentUser.name}</span>
+          <button class="btn-outline" onclick="doLogout()" style="padding:6px 16px;font-size:0.85rem;">Logout</button>
+        `;
+        userMenu.style.display = 'flex';
+        userMenu.style.alignItems = 'center';
+        userMenu.style.gap = '16px';
+        userMenu.style.marginLeft = 'auto';
+        navLinks.appendChild(userMenu);
+      }
+      
+      // Show post ad form in modal
+      if (document.getElementById('postAdForm')) {
+        document.getElementById('postAdForm').style.display = 'block';
+      }
+    } else {
+      // Show login button
+      if (loginBtn) loginBtn.style.display = 'inline-flex';
+      
+      // Remove user menu if exists
+      const userMenu = document.querySelector('.user-profile');
+      if (userMenu) userMenu.remove();
+      
+      // Hide post ad form in modal
+      if (document.getElementById('postAdForm')) {
+        document.getElementById('postAdForm').style.display = 'none';
+      }
+    }
+  }
+
+  // ===== POST AD STEPS =====
+  function goToStep2() {
+    const make = document.getElementById('adMake').value;
+    const model = document.getElementById('adModel').value.trim();
+    const variant = document.getElementById('adVariant').value.trim();
+    const year = document.getElementById('adYear').value;
+    const segment = document.getElementById('adSegment').value;
+    const condition = document.getElementById('adCondition').value;
+    const fuel = document.getElementById('adFuel').value;
+    const price = document.getElementById('adPrice').value;
+    const loc = document.getElementById('adLocation').value;
+
+    if (!make || !model || !variant || !year || !segment || !condition || !fuel || !price || !loc) {
+      showAlert('postAdAlert', '⚠️ Please fill in all required fields before continuing.', 'danger');
+      return;
+    }
+    hideAlert('postAdAlert');
+    document.getElementById('adStep1').style.display = 'none';
+    document.getElementById('adStep2').style.display = 'block';
+    document.getElementById('step1line').style.width = '100%';
+    document.getElementById('step2dot').style.background = 'var(--blue)';
+    document.getElementById('step2dot').style.color = 'white';
+    document.getElementById('postAdModal').querySelector('.modal').scrollTop = 0;
+  }
+
+  function backToStep1() {
+    document.getElementById('adStep2').style.display = 'none';
+    document.getElementById('adStep1').style.display = 'block';
+    document.getElementById('step1line').style.width = '0%';
+    document.getElementById('step2dot').style.background = 'var(--border)';
+    document.getElementById('step2dot').style.color = 'var(--grey)';
+  }
+
+  function goToStep3() {
+    const desc = document.getElementById('adDescription').value.trim();
+    const phone = document.getElementById('adPhone').value.trim();
+    if (!desc || !phone) {
+      showAlert('postAdAlert', '⚠️ Please add a description and contact phone number.', 'danger');
+      return;
+    }
+    hideAlert('postAdAlert');
+
+    // Build review
+    const make = document.getElementById('adMake').value;
+    const model = document.getElementById('adModel').value;
+    const variant = document.getElementById('adVariant').value;
+    const year = document.getElementById('adYear').value;
+    const price = document.getElementById('adPrice').value;
+    const loc = document.getElementById('adLocation').value;
+    const mileage = document.getElementById('adMileage').value;
+    const fuel = document.getElementById('adFuel').value;
+    const trans = document.getElementById('adTransmission').value;
+    const color = document.getElementById('adColor').value;
+    const condition = document.getElementById('adCondition').value;
+    const segment = document.getElementById('adSegment').value;
+
+    document.getElementById('adReviewBox').innerHTML = `
+      <div style="font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--blue-bright);margin-bottom:14px;">📋 Ad Summary</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        ${row('Car', make + ' ' + model)}
+        ${row('Variant', variant)}
+        ${row('Year', year)}
+        ${row('Condition', condition)}
+        ${row('Segment', segment)}
+        ${row('Fuel', fuel)}
+        ${row('Transmission', trans || 'Not specified')}
+        ${row('Mileage', mileage ? mileage + ' km' : 'Not specified')}
+        ${row('Color', color || 'Not specified')}
+        ${row('Location', loc)}
+        ${row('Price', 'PKR ' + Number(price).toLocaleString())}
+        ${row('Phone', phone)}
+      </div>
+    `;
+
+    document.getElementById('adStep2').style.display = 'none';
+    document.getElementById('adStep3').style.display = 'block';
+    document.getElementById('step2line').style.width = '100%';
+    document.getElementById('step3dot').style.background = 'var(--blue)';
+    document.getElementById('step3dot').style.color = 'white';
+    document.getElementById('postAdModal').querySelector('.modal').scrollTop = 0;
+  }
+
+  function row(label, val) {
+    return `<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">
+      <div style="font-size:0.75rem;color:var(--grey-dim);text-transform:uppercase;letter-spacing:0.1em;font-family:'Rajdhani',sans-serif;font-weight:600;">${label}</div>
+      <div style="font-size:0.9rem;color:var(--white);margin-top:2px;">${val}</div>
+    </div>`;
+  }
+
+  function backToStep2() {
+    document.getElementById('adStep3').style.display = 'none';
+    document.getElementById('adStep2').style.display = 'block';
+    document.getElementById('step2line').style.width = '0%';
+    document.getElementById('step3dot').style.background = 'var(--border)';
+    document.getElementById('step3dot').style.color = 'var(--grey)';
+  }
+
+  function submitAd() {
+    if (!currentUser) {
+      showAlert('postAdAlert', 'Please login first.', 'danger'); return;
+    }
+    const make = document.getElementById('adMake').value;
+    const model = document.getElementById('adModel').value;
+    const variant = document.getElementById('adVariant').value;
+    const year = document.getElementById('adYear').value;
+    const price = document.getElementById('adPrice').value;
+    const loc = document.getElementById('adLocation').value;
+    const mileage = document.getElementById('adMileage').value;
+    const fuel = document.getElementById('adFuel').value;
+    const trans = document.getElementById('adTransmission').value;
+    const color = document.getElementById('adColor').value;
+    const condition = document.getElementById('adCondition').value;
+    const segment = document.getElementById('adSegment').value;
+    const desc = document.getElementById('adDescription').value;
+    const phone = document.getElementById('adPhone').value;
+    const neg = document.getElementById('adNegotiable').value;
+
+    // Collect images from preview container
+    const imageElements = document.querySelectorAll('.preview-img');
+    const images = Array.from(imageElements).map(img => img.src); // Get base64 data URLs
+
+    // Add ad directly to live listings
+    const adId = Date.now();
+    const newAd = { adId, make, model, variant, year, price, loc, mileage, fuel, trans, color, condition, segment, desc, phone, neg, seller: currentUser, images: images };
+    const liveAds = JSON.parse(localStorage.getItem('oniqx_approved') || '[]');
+    liveAds.push(newAd);
+    localStorage.setItem('oniqx_approved', JSON.stringify(liveAds));
+
+    // Notify admin via email (no approval needed)
+    const subject = encodeURIComponent(`[ONIQX] New Car Listing: ${year} ${make} ${model} ${variant}`);
+    const body = encodeURIComponent(
+`NEW CAR LISTING — ONIQX CAR DEALS
+====================================
+Posted: ${new Date().toLocaleString()}
+Seller: ${currentUser.name} (${currentUser.email})
+Ad ID: ${adId}
+
+CAR DETAILS:
+Make: ${make}
+Model: ${model}
+Variant: ${variant}
+Year: ${year}
+Condition: ${condition}
+Segment: ${segment}
+Fuel: ${fuel}
+Transmission: ${trans}
+Mileage: ${mileage || 'Not specified'} km
+Color: ${color || 'Not specified'}
+
+PRICING & CONTACT:
+Asking Price: PKR ${Number(price).toLocaleString()}
+Negotiable: ${neg}
+Seller Phone: ${phone}
+Location: ${loc}, Pakistan
+Photos: ${images.length} images attached
+
+DESCRIPTION:
+${desc}
+====================================`
+    );
+
+    window.open(`mailto:oniqx.ae@gmail.com?subject=${subject}&body=${body}`, '_blank');
+    closeModal('postAdModal');
+    openModal('successModal');
+    updateListingCounter(1);
+    renderLiveAds();
+    resetAdForm();
+  }
+
+  function updateListingCounter(add) {
+    const el = document.getElementById('statListings');
+    if (!el) return;
+    const current = parseInt(el.dataset.count || '0') + add;
+    el.dataset.count = current;
+    el.textContent = current + (current > 0 ? '+' : '');
+  }
+
+  function resetAdForm() {
+    ['adMake','adModel','adVariant','adYear','adSegment','adCondition','adMileage','adFuel',
+     'adTransmission','adColor','adPrice','adLocation','adDescription','adPhone','adNegotiable'
+    ].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    document.getElementById('uploadPreviews').innerHTML = '';
+    document.getElementById('adStep1').style.display = 'block';
+    document.getElementById('adStep2').style.display = 'none';
+    document.getElementById('adStep3').style.display = 'none';
+    ['step1line','step2line'].forEach(id => document.getElementById(id).style.width = '0%');
+    ['step2dot','step3dot'].forEach(id => {
+      document.getElementById(id).style.background = 'var(--border)';
+      document.getElementById(id).style.color = 'var(--grey)';
+    });
+  }
+
+  // ===== PHOTO PREVIEW =====
+  function previewImages(event) {
+    const container = document.getElementById('uploadPreviews');
+    const files = Array.from(event.target.files).slice(0, 10);
+    container.innerHTML = '';
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.className = 'preview-img';
+        img.title = 'Click to remove';
+        img.onclick = () => img.remove();
+        container.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ===== CONTACT FORM =====
+  function submitContact() {
+    const name = document.getElementById('cName').value.trim();
+    const email = document.getElementById('cEmail').value.trim();
+    const subject = document.getElementById('cSubject').value;
+    const message = document.getElementById('cMessage').value.trim();
+    const phone = document.getElementById('cPhone').value.trim();
+
+    if (!name || !email || !subject || !message) {
+      showAlert('contactAlert', '⚠️ Please fill in all required fields.', 'danger');
+      return;
+    }
+
+    const subjectLine = encodeURIComponent(`[ONIQX Contact] ${subject} — from ${name}`);
+    const body = encodeURIComponent(
+`CONTACT MESSAGE FROM ONIQX WEBSITE
+====================================
+From: ${name}
+Email: ${email}
+Phone: ${phone || 'Not provided'}
+Topic: ${subject}
+Date: ${new Date().toLocaleString()}
+
+MESSAGE:
+${message}
+
+====================================
+Reply directly to this email to respond to the sender.`
+    );
+
+    window.open(`mailto:oniqx.ae@gmail.com?subject=${subjectLine}&body=${body}`, '_blank');
+
+    showAlert('contactAlert', '✅ Message sent! Your default email client has opened. Click Send to deliver your message to oniqx.ae@gmail.com', 'success');
+    document.getElementById('cName').value = '';
+    document.getElementById('cEmail').value = '';
+    document.getElementById('cPhone').value = '';
+    document.getElementById('cSubject').value = '';
+    document.getElementById('cMessage').value = '';
+  }
+
+  // ===== SEGMENT FILTER =====
+  function filterSegment(el, type) {
+    document.querySelectorAll('.segment-card').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    filterCards('segment', type);
+    document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function applyFilter(el, type) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    filterCards('condition', type);
+  }
+
+  function filterCards(attr, val) {
+    const cards = document.querySelectorAll('.car-card');
+    cards.forEach(card => {
+      if (val === 'all') {
+        card.style.display = '';
+      } else {
+        card.style.display = card.dataset[attr] === val ? '' : 'none';
+      }
+    });
+  }
+
+  function scrollToListings() {
+    document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ===== ALERT HELPERS =====
+  function showAlert(id, msg, type) {
+    const el = document.getElementById(id);
+    el.style.display = 'flex';
+    el.className = `alert alert-${type}`;
+    el.innerHTML = `<span>${msg}</span>`;
+    setTimeout(() => hideAlert(id), 6000);
+  }
+
+  function hideAlert(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  }
+
+  // ===== TOAST =====
+  function showToast(msg, type = 'info') {
+    const icons = { success: '✅', info: 'ℹ️', error: '❌' };
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<span>${icons[type]}</span><span>${msg}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.animation = 'toastOut 0.4s ease forwards';
+      setTimeout(() => toast.remove(), 400);
+    }, 3500);
+  }
+
+  // ===== HAMBURGER MOBILE NAV =====
+  function toggleMobileNav() {
+    const nav = document.getElementById('mobileNav');
+    const btn = document.getElementById('hamburgerBtn');
+    const isOpen = nav.classList.contains('open');
+    if (isOpen) {
+      nav.classList.remove('open');
+      btn.classList.remove('open');
+      document.body.style.overflow = '';
+    } else {
+      nav.classList.add('open');
+      btn.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeMobileNav() {
+    document.getElementById('mobileNav').classList.remove('open');
+    document.getElementById('hamburgerBtn').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Close mobile nav on scroll
+  window.addEventListener('scroll', () => {
+    closeMobileNav();
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 50) {
+      nav.style.background = 'rgba(0,0,0,0.95)';
+    } else {
+      nav.style.background = 'rgba(0,0,0,0.85)';
+    }
+  });
+
+  // Close mobile nav on outside click
+  document.addEventListener('click', (e) => {
+    const mobileNav = document.getElementById('mobileNav');
+    const hamburger = document.getElementById('hamburgerBtn');
+    if (mobileNav && mobileNav.classList.contains('open')) {
+      if (!mobileNav.contains(e.target) && !hamburger.contains(e.target)) {
+        closeMobileNav();
+      }
+    }
+  });
+</script>
+</body>
+</html>
